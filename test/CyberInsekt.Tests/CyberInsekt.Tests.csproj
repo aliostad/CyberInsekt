@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationTests.cs" />
+    <Compile Include="LinkExtraction\SimpleLinkExtractorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Storage\InMemoryUrlStoreTests.cs" />
   </ItemGroup>
@@ -67,6 +68,11 @@
       <Project>{02957F40-979E-4A1A-9ED4-0853B514EAB5}</Project>
       <Name>CyberInsekt</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Test.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

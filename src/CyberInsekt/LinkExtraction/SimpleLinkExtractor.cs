@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -9,7 +10,7 @@ using HtmlAgilityPack;
 
 namespace CyberInsekt.LinkExtraction
 {
-    public class SimpleLinkEaxtractor : ILinkExtractor
+    public class SimpleLinkExtractor : ILinkExtractor
     {
         public IEnumerable<string> GetSupportedMediaTypes()
         {
@@ -31,7 +32,7 @@ namespace CyberInsekt.LinkExtraction
             return response.Content.ReadAsStringAsync()
                 .Then(content =>
                           {
-                              Extract(response, content, requests);
+                              Extract(response.RequestMessage.RequestUri, content, requests);
                               return (IEnumerable<HttpRequestMessage>) requests;
                           }
                 );
@@ -39,7 +40,7 @@ namespace CyberInsekt.LinkExtraction
 
          }
 
-        internal void Extract(HttpResponseMessage response,
+        internal void Extract(Uri requestUri,
             string content, List<HttpRequestMessage> listTobeFilled)
         {
             var document = new HtmlDocument();
@@ -52,17 +53,28 @@ namespace CyberInsekt.LinkExtraction
                                  var attribute = node.Attributes
                                      .FirstOrDefault(n => n.Name.Equals("href", 
                                          StringComparison.InvariantCultureIgnoreCase));
+
+                                 if(attribute == null)
+                                     return;
+
                                  try
                                  {
+                                     var u = attribute.Value.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ?
+                                         new Uri(attribute.Value) :
+                                         new Uri(attribute.Value, UriKind.Relative);
+                                     if(!u.IsAbsoluteUri)
+                                         u = new Uri(requestUri, attribute.Value);
 
+                                     listTobeFilled.Add(new HttpRequestMessage(HttpMethod.Get, u));
                                  }
                                  catch (Exception exception)
                                  {
                                      
-                                     throw;
+                                    CrawlerRuntime.Current.TraceWriteLine(
+                                        exception.ToString(), TraceLevel.Error);
                                  }
 
-                                 //response.RequestMessage.RequestUri
+                                 
 
                              }
                 );

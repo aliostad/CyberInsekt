@@ -65,7 +65,7 @@
     <Compile Include="CrawlerConfiguration.cs" />
     <Compile Include="CrawlerRuntime.cs" />
     <Compile Include="LinkExtraction\ILinkExtractor.cs" />
-    <Compile Include="LinkExtraction\SimpleLinkEaxtractor.cs" />
+    <Compile Include="LinkExtraction\SimpleLinkExtractor.cs" />
     <Compile Include="Storage\InMemoryUrlStore.cs" />
     <Compile Include="Storage\IUrlStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
