@@ -11,7 +11,7 @@ namespace CyberInsekt
         private static readonly CrawlerRuntime _current = new CrawlerRuntime();
         private CrawlerRuntime()
         {
-            TraceWriteLine = (s, tl) => Trace.WriteLine(s);
+            TraceWriteLine = ConsoleWriter.WriteLine;
         }
 
 
@@ -21,5 +21,40 @@ namespace CyberInsekt
         }
 
         public Action<string, TraceLevel> TraceWriteLine { get; set; }
+    }
+
+    static class ConsoleWriter
+    {
+        public static void WriteLine(string message, TraceLevel level)
+        {
+            var foregroundColor = Console.ForegroundColor;
+            try
+            {
+                switch (level)
+                {
+                     case TraceLevel.Verbose:
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        break;
+                    case TraceLevel.Warning:
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        break;
+                    case TraceLevel.Info:
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        break;
+                    case TraceLevel.Error:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        break;
+                    default:
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        break;
+                }
+                Console.WriteLine(message);
+
+            }
+            finally
+            {
+                Console.ForegroundColor = foregroundColor;
+            }
+        }
     }
 }

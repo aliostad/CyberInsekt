@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Web;
 using HtmlAgilityPack;
 
 namespace CyberInsekt.LinkExtraction
@@ -21,26 +23,26 @@ namespace CyberInsekt.LinkExtraction
          {
              var requests = new List<HttpRequestMessage>();
 
-             // sanity check only _______________________________
-             if (!response.IsSuccessStatusCode)
-                 return TaskHelpers.FromResult( (IEnumerable<HttpRequestMessage>) requests);
-            
-            if(response.Content==null)
+         
+            // sanity check only _______________________________
+            if (!response.IsSuccessStatusCode)
+                return TaskHelpers.FromResult((IEnumerable<HttpRequestMessage>)requests);
+
+            if (response.Content == null)
                 return TaskHelpers.FromResult((IEnumerable<HttpRequestMessage>)requests);
 
             // it assumes it is already loaded into buffer
             return response.Content.ReadAsStringAsync()
                 .Then(content =>
-                          {
-                              Extract(response.RequestMessage.RequestUri, content, requests);
-                              return (IEnumerable<HttpRequestMessage>) requests;
-                          }
+                {
+                    ExtractInternal(response.RequestMessage.RequestUri, content, requests);
+                    return (IEnumerable<HttpRequestMessage>)requests;
+                }
                 );
-
 
          }
 
-        internal void Extract(Uri requestUri,
+        internal void ExtractInternal(Uri requestUri,
             string content, List<HttpRequestMessage> listTobeFilled)
         {
             var document = new HtmlDocument();
@@ -59,11 +61,13 @@ namespace CyberInsekt.LinkExtraction
 
                                  try
                                  {
-                                     var u = attribute.Value.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ?
-                                         new Uri(attribute.Value) :
-                                         new Uri(attribute.Value, UriKind.Relative);
+                                     string value = attribute.Value;
+                                     value = HttpUtility.UrlDecode(value).Trim();
+                                     var u = Regex.IsMatch(value, "http(s)?://") ?
+                                         new Uri(value) :
+                                         new Uri(value, UriKind.Relative);
                                      if(!u.IsAbsoluteUri)
-                                         u = new Uri(requestUri, attribute.Value);
+                                         u = new Uri(requestUri, value);
 
                                      listTobeFilled.Add(new HttpRequestMessage(HttpMethod.Get, u));
                                  }
@@ -71,7 +75,7 @@ namespace CyberInsekt.LinkExtraction
                                  {
                                      
                                     CrawlerRuntime.Current.TraceWriteLine(
-                                        exception.ToString(), TraceLevel.Error);
+                                        attribute.Value + "----" + exception.ToString(), TraceLevel.Error);
                                  }
 
                                  
