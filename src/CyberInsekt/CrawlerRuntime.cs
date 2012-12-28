@@ -43,6 +43,7 @@ namespace CyberInsekt
                         break;
                     case TraceLevel.Error:
                         Console.ForegroundColor = ConsoleColor.Red;
+                        Trace.WriteLine(message);
                         break;
                     default:
                         Console.ForegroundColor = ConsoleColor.DarkGray;

@@ -63,6 +63,10 @@ namespace CyberInsekt.LinkExtraction
                                  {
                                      string value = attribute.Value;
                                      value = HttpUtility.UrlDecode(value).Trim();
+
+                                     if(value.ToLower().StartsWith("javascript") || value.ToLower().StartsWith("mailto"))
+                                         return;
+
                                      var u = Regex.IsMatch(value, "http(s)?://") ?
                                          new Uri(value) :
                                          new Uri(value, UriKind.Relative);
@@ -81,6 +85,7 @@ namespace CyberInsekt.LinkExtraction
                                  
 
                              }
+                             
                 );
         }
     }
