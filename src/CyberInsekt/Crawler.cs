@@ -137,13 +137,13 @@ namespace CyberInsekt
                             LinkExtractor(resp).Then(
                                 (links) =>
                                     {
-                                        Parallel.ForEach(links, (link) =>
-                                                                    {
-                                                var lnk = link;
-                                                if (!Store.Exists(link.RequestUri))
-                                                    _requestQueue.Enqueue(lnk);
-                                            });
-            }
+                                        links.Where(x=> !Store.Exists(x.RequestUri))
+                                            .ToList()
+                                            .ForEach((link) =>
+                                                         {
+                                                             _requestQueue.Enqueue(link);
+                                                         });
+                                    }
                                 );
                         }
                         
