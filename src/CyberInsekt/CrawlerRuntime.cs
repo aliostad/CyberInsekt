@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -34,6 +35,7 @@ namespace CyberInsekt
                 {
                      case TraceLevel.Verbose:
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        
                         break;
                     case TraceLevel.Warning:
                         Console.ForegroundColor = ConsoleColor.Yellow;
