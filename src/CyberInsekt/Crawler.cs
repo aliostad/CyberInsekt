@@ -19,7 +19,7 @@ namespace CyberInsekt
         private AutoResetEvent _resetEvent = new AutoResetEvent(false);
         private bool _keepRunning = true;
         private int _requestsRunning = 0;
-        private int _maxRequestsRunning = 1000;
+        private int _maxRequestsRunning = 50;
 
         public Crawler()
         {
