@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using CyberInsekt.Storage;
 using Dapper;
@@ -51,6 +52,44 @@ namespace CyberInsekt.SqlUrlStore
                 return urls.Any();
             }
 
+        }
+
+        public override void Enqueue(Uri uri)
+        {
+            using (var con = new SqlConnection(_connectionString))
+            {
+                con.Open();
+                con.Execute("Enqueue",
+                            param: new {Url = uri.ToString()},
+                            commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public override bool TryDequeue(out Uri uri)
+        {
+            uri = null;
+            using (var con = new SqlConnection(_connectionString))
+            {
+                con.Open();
+                IEnumerable<dynamic> result = con.Query("Dequeue", commandType: CommandType.StoredProcedure);
+                if(result.Any())
+                {
+                    string url = result.First().Url;
+                    if(string.IsNullOrEmpty(url))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        uri = new Uri(url);
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }

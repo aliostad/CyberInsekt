@@ -10,6 +10,6 @@ namespace CyberInsekt.LinkExtraction
     public interface ILinkExtractor
     {
         IEnumerable<string> GetSupportedMediaTypes();
-        Task<IEnumerable<HttpRequestMessage>> Extract(HttpResponseMessage response);
+        Task<IEnumerable<Uri>> Extract(HttpResponseMessage response);
     }
 }

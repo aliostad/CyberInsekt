@@ -23,13 +23,13 @@ namespace CyberInsekt.Tests.LinkExtraction
 
  */
  
-            var list = new List<HttpRequestMessage>();
+            var list = new List<Uri>();
             var extractor = new SimpleLinkExtractor();
             extractor.ExtractInternal(new Uri("http://google.com/a/b/c/s"),
                               File.ReadAllText("Test.html"),
                               list);
 
-            var urls = list.Select(x => x.RequestUri.ToString()).ToList();
+            var urls = list.Select(x => x.ToString()).ToList();
             urls.ForEach(x=> Console.WriteLine(x));
             Assert.Contains("http://google.com/a/b/c/straight", urls);
             Assert.Contains("http://google.com/straight2", urls);

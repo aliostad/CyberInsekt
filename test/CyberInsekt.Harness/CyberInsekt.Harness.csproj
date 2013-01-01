@@ -39,6 +39,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
@@ -64,6 +65,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\CyberInsekt.SqlUrlStore\CyberInsekt.SqlUrlStore.csproj">
+      <Project>{2E0AC928-5B05-41AF-A4BE-2877E3C09963}</Project>
+      <Name>CyberInsekt.SqlUrlStore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\CyberInsekt\CyberInsekt.csproj">
       <Project>{02957F40-979E-4A1A-9ED4-0853B514EAB5}</Project>
       <Name>CyberInsekt</Name>

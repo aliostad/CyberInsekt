@@ -15,7 +15,6 @@ namespace CyberInsekt
     public class Crawler
     {
         private CrawlerConfiguration _configuration;
-        private ConcurrentQueue<HttpRequestMessage> _requestQueue = new ConcurrentQueue<HttpRequestMessage>(); 
         private AutoResetEvent _resetEvent = new AutoResetEvent(false);
         private bool _keepRunning = true;
         private int _requestsRunning = 0;
@@ -36,7 +35,7 @@ namespace CyberInsekt
         }
 
 
-        public Func<HttpResponseMessage, Task<IEnumerable<HttpRequestMessage>>>
+        public Func<HttpResponseMessage, Task<IEnumerable<Uri>>>
             LinkExtractor { get; set; }
 
         public HttpClient Requester { get; set; }
@@ -51,7 +50,7 @@ namespace CyberInsekt
 
         public void Crawl(string startUrl)
         {
-            _requestQueue.Enqueue(new HttpRequestMessage(HttpMethod.Get, startUrl));
+            Store.Enqueue(new Uri(startUrl));
             //DownloadAndProcess();
 
         }
@@ -60,16 +59,16 @@ namespace CyberInsekt
         {
             Task.Factory.StartNew(() =>
                                       {
-                                          HttpRequestMessage req = null;
+                                          Uri uri = null;
                                           while (_keepRunning)
                                           {
                                                _resetEvent.WaitOne(500);
 
-                                               while (!_requestQueue.IsEmpty && 
+                                               while (
                                                    _requestsRunning <= _maxRequestsRunning && 
-                                                   _requestQueue.TryDequeue(out req))
+                                                   Store.TryDequeue(out uri))
                                                {
-                                                   DownloadAndProcess(req)
+                                                   DownloadAndProcess(new HttpRequestMessage(HttpMethod.Get, uri))
                                                        .ContinueWith( (t) =>
                                                                           {
                                                                               if(t.IsFaulted)
@@ -137,11 +136,11 @@ namespace CyberInsekt
                             LinkExtractor(resp).Then(
                                 (links) =>
                                     {
-                                        links.Where(x=> !Store.Exists(x.RequestUri))
+                                        links.Where(x=> !Store.Exists(x))
                                             .ToList()
                                             .ForEach((link) =>
                                                          {
-                                                             _requestQueue.Enqueue(link);
+                                                             Store.Enqueue(link);
                                                          });
                                     }
                                 );

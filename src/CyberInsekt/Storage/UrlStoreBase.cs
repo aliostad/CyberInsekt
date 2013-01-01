@@ -34,5 +34,7 @@ namespace CyberInsekt.Storage
             }
         }
 
+        public abstract void Enqueue(Uri uri);
+        public abstract bool TryDequeue(out Uri uri);
     }
 }

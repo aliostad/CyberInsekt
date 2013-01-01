@@ -14,5 +14,7 @@ namespace CyberInsekt.Storage
         /// <returns>True if it did not exist. False if existed and did not have to add</returns>
         void Store(Uri uri);
         bool Exists(Uri uri);
+        void Enqueue(Uri uri);
+        bool TryDequeue(out Uri uri);
     }
 }

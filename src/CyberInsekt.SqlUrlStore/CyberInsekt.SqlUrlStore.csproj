@@ -56,8 +56,11 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Scripts\combine_scripts.bat" />
+    <None Include="Scripts\Dequeue.sp" />
+    <None Include="Scripts\Enqueue.sp" />
     <None Include="Scripts\GetUrl.sp" />
     <None Include="Scripts\InsertUrl.sp" />
+    <None Include="Scripts\UrlQueue.tbl" />
     <None Include="Scripts\UrlStore.tbl" />
   </ItemGroup>
   <ItemGroup />

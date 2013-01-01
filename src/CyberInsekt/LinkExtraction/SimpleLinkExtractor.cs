@@ -19,31 +19,31 @@ namespace CyberInsekt.LinkExtraction
             return new string[]{"text/html"};
         }
 
-        public Task<IEnumerable<HttpRequestMessage>> Extract(HttpResponseMessage response)
+        public Task<IEnumerable<Uri>> Extract(HttpResponseMessage response)
          {
-             var requests = new List<HttpRequestMessage>();
+             var requests = new List<Uri>();
 
          
             // sanity check only _______________________________
             if (!response.IsSuccessStatusCode)
-                return TaskHelpers.FromResult((IEnumerable<HttpRequestMessage>)requests);
+                return TaskHelpers.FromResult((IEnumerable<Uri>)requests);
 
             if (response.Content == null)
-                return TaskHelpers.FromResult((IEnumerable<HttpRequestMessage>)requests);
+                return TaskHelpers.FromResult((IEnumerable<Uri>)requests);
 
             // it assumes it is already loaded into buffer
             return response.Content.ReadAsStringAsync()
                 .Then(content =>
                 {
                     ExtractInternal(response.RequestMessage.RequestUri, content, requests);
-                    return (IEnumerable<HttpRequestMessage>)requests;
+                    return (IEnumerable<Uri>)requests;
                 }
                 );
 
          }
 
         internal void ExtractInternal(Uri requestUri,
-            string content, List<HttpRequestMessage> listTobeFilled)
+            string content, List<Uri> listTobeFilled)
         {
             var document = new HtmlDocument();
             document.LoadHtml(content);
@@ -73,7 +73,7 @@ namespace CyberInsekt.LinkExtraction
                                      if(!u.IsAbsoluteUri)
                                          u = new Uri(requestUri, value);
 
-                                     listTobeFilled.Add(new HttpRequestMessage(HttpMethod.Get, u));
+                                     listTobeFilled.Add(u);
                                  }
                                  catch (Exception exception)
                                  {
