@@ -23,8 +23,18 @@ namespace CyberInsekt.Storage
             return Exists(ComputeUriHash(uri), uri.ToString());
         }
 
+        public void Enqueue(Uri uri)
+        {
+            if (!uri.IsAbsoluteUri)
+                throw new ArgumentException("uri must be absolute");
+
+            Enqueue(ComputeUriHash(uri), uri.ToString());
+        }
+
         protected abstract void Store(byte[] hash, string url);
         protected abstract bool Exists(byte[] hash, string url);
+        protected abstract void Enqueue(byte[] hash, string url);
+        public abstract bool TryDequeue(out Uri uri);
 
         protected virtual byte[] ComputeUriHash(Uri uri)
         {
@@ -34,7 +44,8 @@ namespace CyberInsekt.Storage
             }
         }
 
-        public abstract void Enqueue(Uri uri);
-        public abstract bool TryDequeue(out Uri uri);
+        
+
+      
     }
 }

@@ -26,7 +26,7 @@ BEGIN
 	BEGIN TRAN
 	SELECT 
 		@Url = URL,
-		@Id	 = [Id] 
+		@Id	 = [UrlHash] 
 	FROM
 	(SELECT TOP 1 * FROM dbo.UrlQueue) 
 			AS P 
@@ -35,7 +35,7 @@ BEGIN
 		BEGIN
 		
 		DELETE FROM UrlQueue
-			WHERE [Id] = @Id
+			WHERE [UrlHash] = @Id
 		
 		END
 		

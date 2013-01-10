@@ -68,15 +68,18 @@ namespace CyberInsekt
                                                    _requestsRunning <= _maxRequestsRunning && 
                                                    Store.TryDequeue(out uri))
                                                {
-                                                   DownloadAndProcess(new HttpRequestMessage(HttpMethod.Get, uri))
-                                                       .ContinueWith( (t) =>
-                                                                          {
-                                                                              if(t.IsFaulted)
-                                                                                   CrawlerRuntime.Current.TraceWriteLine(
-                                                                                        t.Exception.ToString(), TraceLevel.Error);
-                                                                          }
-                                                       );
-                                                   Interlocked.Increment(ref _requestsRunning);
+                                                   if (!Store.Exists(uri))
+                                                   {
+                                                       DownloadAndProcess(new HttpRequestMessage(HttpMethod.Get, uri))
+                                                            .ContinueWith((t) =>
+                                                            {
+                                                                if (t.IsFaulted)
+                                                                    CrawlerRuntime.Current.TraceWriteLine(
+                                                                         t.Exception.ToString(), TraceLevel.Error);
+                                                            });
+                                                       Interlocked.Increment(ref _requestsRunning);
+
+                                                   }
                                                }
 
                                           }

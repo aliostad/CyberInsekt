@@ -13,7 +13,8 @@ GO
 -- Description:	Enqueues a URL into queue
 -- =============================================
 CREATE PROCEDURE Enqueue
-	@Url	NVARCHAR(2048)
+	@UrlHash	BINARY(20),
+	@Url		NVARCHAR(2048)
 	 
 AS
 BEGIN
@@ -24,9 +25,9 @@ BEGIN
 	
 	INSERT INTO 
 		UrlQueue
-	(Url)
+	(Url, UrlHash)
 	VALUES
-		(@Url)
+		(@Url, @UrlHash)
 	
 
 END

@@ -46,7 +46,7 @@ namespace CyberInsekt.SqlUrlStore
             using (var con = new SqlConnection(_connectionString))
             {
                 con.Open();
-                var urls = con.Query("GetUrl", 
+                var urls = con.Query("UrlExists", 
                     param: new {UrlHash = hash},
                     commandType: CommandType.StoredProcedure);
                 return urls.Any();
@@ -54,13 +54,13 @@ namespace CyberInsekt.SqlUrlStore
 
         }
 
-        public override void Enqueue(Uri uri)
+        protected override void Enqueue(byte[] hash, string url)
         {
             using (var con = new SqlConnection(_connectionString))
             {
                 con.Open();
                 con.Execute("Enqueue",
-                            param: new {Url = uri.ToString()},
+                            param: new { Url = url },
                             commandType: CommandType.StoredProcedure);
             }
         }
@@ -71,11 +71,12 @@ namespace CyberInsekt.SqlUrlStore
             using (var con = new SqlConnection(_connectionString))
             {
                 con.Open();
-                IEnumerable<dynamic> result = con.Query("Dequeue", commandType: CommandType.StoredProcedure);
-                if(result.Any())
+                IEnumerable<dynamic> result = con.Query("Dequeue", commandType: CommandType.StoredProcedure)
+                    .ToList();
+                if (result.Any())
                 {
                     string url = result.First().Url;
-                    if(string.IsNullOrEmpty(url))
+                    if (string.IsNullOrEmpty(url))
                     {
                         return false;
                     }
