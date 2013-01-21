@@ -24,7 +24,7 @@ namespace CyberInsekt.Tests.LinkExtraction
  */
  
             var list = new List<Uri>();
-            var extractor = new SimpleLinkExtractor();
+            var extractor = new HtmlAgilityLinkExtractor();
             extractor.ExtractInternal(new Uri("http://google.com/a/b/c/s"),
                               File.ReadAllText("Test.html"),
                               list);

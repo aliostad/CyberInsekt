@@ -13,6 +13,15 @@ namespace CyberInsekt
         private CrawlerRuntime()
         {
             TraceWriteLine = ConsoleWriter.WriteLine;
+            UrlTrimmer = (s) =>
+                {
+                    s = s ?? "";
+                    int index = s.IndexOf('#');
+                    if (index >= 0)
+                        return s.Substring(0, index);
+                    else
+                        return s;
+                };
         }
 
 
@@ -22,6 +31,9 @@ namespace CyberInsekt
         }
 
         public Action<string, TraceLevel> TraceWriteLine { get; set; }
+
+        public Func<string, string> UrlTrimmer { get; set; }
+
     }
 
     static class ConsoleWriter

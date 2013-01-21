@@ -60,7 +60,7 @@ namespace CyberInsekt.SqlUrlStore
             {
                 con.Open();
                 con.Execute("Enqueue",
-                            param: new { Url = url },
+                            param: new { UrlHash = hash, Url = url },
                             commandType: CommandType.StoredProcedure);
             }
         }

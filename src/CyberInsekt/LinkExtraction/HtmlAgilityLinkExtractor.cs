@@ -12,7 +12,7 @@ using HtmlAgilityPack;
 
 namespace CyberInsekt.LinkExtraction
 {
-    public class SimpleLinkExtractor : ILinkExtractor
+    public class HtmlAgilityLinkExtractor : ILinkExtractor
     {
         public IEnumerable<string> GetSupportedMediaTypes()
         {

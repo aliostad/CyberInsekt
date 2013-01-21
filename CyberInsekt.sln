@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC66575A-35AE-4A71-ADE4-B571081092F7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9B930957-60DC-435C-8CCD-46616B52846C}"
@@ -85,5 +85,8 @@ Global
 		{342D6091-ECE3-432A-81BA-DD2DD052C9E7} = {9B930957-60DC-435C-8CCD-46616B52846C}
 		{59E37978-8431-4FDB-ADDA-111C6FC46053} = {9B930957-60DC-435C-8CCD-46616B52846C}
 		{BBD0B6B6-110D-42A8-9154-6F873D5EF52B} = {9B930957-60DC-435C-8CCD-46616B52846C}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

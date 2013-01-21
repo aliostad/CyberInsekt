@@ -23,12 +23,15 @@ BEGIN
 	SET NOCOUNT ON
 
 	
-	INSERT INTO 
-		UrlQueue
-	(Url, UrlHash)
-	VALUES
-		(@Url, @UrlHash)
-	
+	IF NOT EXISTS(
+		SELECT 1 FROM UrlQueue WHERE UrlHash = @UrlHash)
+		BEGIN
+			INSERT INTO 
+				UrlQueue
+			(Url, UrlHash)
+			VALUES
+				(@Url, @UrlHash)
+		END
 
 END
 GO

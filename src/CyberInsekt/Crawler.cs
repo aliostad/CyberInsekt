@@ -22,9 +22,10 @@ namespace CyberInsekt
 
         public Crawler()
         {
-            LinkExtractor = new SimpleLinkExtractor().Extract;
+            LinkExtractor = new RegexLinkExtractor().Extract;
             Requester = new HttpClient();
             Store = new InMemoryUrlStore();
+ 
             // TODO: read from config file
             Start();
         }
@@ -41,7 +42,8 @@ namespace CyberInsekt
         public HttpClient Requester { get; set; }
 
         public IUrlStore Store { get; set; }
-        
+
+
         public void Crawl()
         {
             // TODO:
@@ -107,6 +109,26 @@ namespace CyberInsekt
 
              response.Content.LoadIntoBufferAsync().Wait();
             var messages = LinkExtractor(response).Result;
+        }
+
+
+
+        private Task<bool> IsWorthCrawling(HttpRequestMessage request)
+        {
+            var headReq = new HttpRequestMessage(HttpMethod.Head, request.RequestUri);
+            return Requester.SendAsync(request)
+                .Then<HttpResponseMessage, bool>(res =>
+                    {
+                        if (!res.IsSuccessStatusCode)
+                            return false;
+
+                        if (res.Content == null)
+                            return false;
+
+                        return res.Content.Headers.ContentType.ToString().ToLower()
+                            .IndexOf("text/html") >= 0;
+
+                    });
         }
 
         private Task DownloadAndProcess (HttpRequestMessage request)

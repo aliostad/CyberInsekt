@@ -12,7 +12,7 @@ namespace CyberInsekt.Harness
     {
         static void Main(string[] args)
         {
-            ThreadPool.SetMinThreads(50, 50);
+            ThreadPool.SetMinThreads(200, 200);
             var crawler = new Crawler();
             if(ConfigurationManager.ConnectionStrings["UrlStore"]!=null)
                 crawler.Store = new UrlStore();
